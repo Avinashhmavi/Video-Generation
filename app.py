@@ -141,12 +141,47 @@ def get_duration(prompt, negative_prompt, input_image_filepath, input_video_file
         return 60
 
 @spaces.GPU(duration=get_duration)
-def generate(prompt, negative_prompt, input_image_filepath, input_video_filepath,
-             height_ui, width_ui, mode,
-             duration_ui, 
-             ui_frames_to_use,
-             seed_ui, randomize_seed, ui_guidance_scale, improve_texture_flag,
+def generate(prompt, negative_prompt, input_image_filepath=None, input_video_filepath=None,
+             height_ui=512, width_ui=704, mode="text-to-video",
+             duration_ui=2.0, 
+             ui_frames_to_use=9,
+             seed_ui=42, randomize_seed=True, ui_guidance_scale=3.0, improve_texture_flag=True,
              progress=gr.Progress(track_tqdm=True)):
+    """
+    Generate high-quality videos using LTX Video model with support for text-to-video, image-to-video, and video-to-video modes.
+
+    Args:
+        prompt (str): Text description of the desired video content. Required for all modes.
+        negative_prompt (str): Text describing what to avoid in the generated video. Optional, can be empty string.
+        input_image_filepath (str or None): Path to input image file. Required for image-to-video mode, None for other modes.
+        input_video_filepath (str or None): Path to input video file. Required for video-to-video mode, None for other modes.
+        height_ui (int): Height of the output video in pixels, must be divisible by 32. Default: 512.
+        width_ui (int): Width of the output video in pixels, must be divisible by 32. Default: 704.
+        mode (str): Generation mode. Required. One of "text-to-video", "image-to-video", or "video-to-video". Default: "text-to-video".
+        duration_ui (float): Duration of the output video in seconds. Range: 0.3 to 8.5. Default: 2.0.
+        ui_frames_to_use (int): Number of frames to use from input video. Only used in video-to-video mode. Must be N*8+1. Default: 9.
+        seed_ui (int): Random seed for reproducible generation. Range: 0 to 2^32-1. Default: 42.
+        randomize_seed (bool): Whether to use a random seed instead of seed_ui. Default: True.
+        ui_guidance_scale (float): CFG scale controlling prompt influence. Range: 1.0 to 10.0. Higher values = stronger prompt influence. Default: 3.0.
+        improve_texture_flag (bool): Whether to use multi-scale generation for better texture quality. Slower but higher quality. Default: True.
+        progress (gr.Progress): Progress tracker for the generation process. Optional, used for UI updates.
+
+    Returns:
+        tuple: A tuple containing (output_video_path, used_seed) where output_video_path is the path to the generated video file and used_seed is the actual seed used for generation.
+    """
+
+    # Validate mode-specific required parameters
+    if mode == "image-to-video":
+        if not input_image_filepath:
+            raise gr.Error("input_image_filepath is required for image-to-video mode")
+    elif mode == "video-to-video":
+        if not input_video_filepath:
+            raise gr.Error("input_video_filepath is required for video-to-video mode")
+    elif mode == "text-to-video":
+        # No additional file inputs required for text-to-video
+        pass
+    else:
+        raise gr.Error(f"Invalid mode: {mode}. Must be one of: text-to-video, image-to-video, video-to-video")
 
     if randomize_seed:
         seed_ui = random.randint(0, 2**32 - 1)
