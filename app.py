@@ -24,7 +24,7 @@ from inference import (
 from ltx_video.pipelines.pipeline_ltx_video import ConditioningItem, LTXMultiScalePipeline, LTXVideoPipeline
 from ltx_video.utils.skip_layer_strategy import SkipLayerStrategy
 
-config_file_path = "configs/ltxv-13b-0.9.7-distilled.yaml"
+config_file_path = "configs/ltxv-13b-0.9.8-distilled.yaml"
 with open(config_file_path, "r") as file:
     PIPELINE_CONFIG_YAML = yaml.safe_load(file)
 
@@ -374,8 +374,8 @@ css="""
 """
 
 with gr.Blocks(css=css) as demo:
-    gr.Markdown("# LTX Video 0.9.7 Distilled")
-    gr.Markdown("Fast high quality video generation. [Model](https://huggingface.co/Lightricks/LTX-Video/blob/main/ltxv-13b-0.9.7-distilled.safetensors) [GitHub](https://github.com/Lightricks/LTX-Video) [Diffusers](https://huggingface.co/Lightricks/LTX-Video-0.9.7-distilled#diffusers-🧨)")
+    gr.Markdown("# LTX Video 0.9.8 13B Distilled")
+    gr.Markdown("Fast high quality video generation. [Model](https://huggingface.co/Lightricks/LTX-Video/blob/main/ltxv-13b-0.9.8-distilled.safetensors) [GitHub](https://github.com/Lightricks/LTX-Video) [Diffusers](https://huggingface.co/Lightricks/LTX-Video-0.9.8-13B-distilled#diffusers-🧨)")
     
     with gr.Row():
         with gr.Column():
@@ -404,7 +404,7 @@ with gr.Blocks(css=css) as demo:
                 step=0.1, 
                 info=f"Target video duration (0.3s to 8.5s)"
             )
-            improve_texture = gr.Checkbox(label="Improve Texture (multi-scale)", value=True, info="Uses a two-pass generation for better quality, but is slower. Recommended for final output.")
+            improve_texture = gr.Checkbox(label="Improve Texture (multi-scale)", value=True,visible=False, info="Uses a two-pass generation for better quality, but is slower. Recommended for final output.")
 
         with gr.Column():
             output_video = gr.Video(label="Generated Video", interactive=False)
@@ -416,7 +416,7 @@ with gr.Blocks(css=css) as demo:
         with gr.Row():
             seed_input = gr.Number(label="Seed", value=42, precision=0, minimum=0, maximum=2**32-1)
             randomize_seed_input = gr.Checkbox(label="Randomize Seed", value=True)
-        with gr.Row():
+        with gr.Row(visible=False):
             guidance_scale_input = gr.Slider(label="Guidance Scale (CFG)", minimum=1.0, maximum=10.0, value=PIPELINE_CONFIG_YAML.get("first_pass", {}).get("guidance_scale", 1.0), step=0.1, info="Controls how much the prompt influences the output. Higher values = stronger influence.")
         with gr.Row():
             height_input = gr.Slider(label="Height", value=512, step=32, minimum=MIN_DIM_SLIDER, maximum=MAX_IMAGE_SIZE, info="Must be divisible by 32.")
