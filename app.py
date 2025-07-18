@@ -375,8 +375,8 @@ css="""
 
 with gr.Blocks(css=css) as demo:
     gr.Markdown("# LTX Video 0.9.8 13B Distilled")
-    gr.Markdown("Fast high quality video generation. [Model](https://huggingface.co/Lightricks/LTX-Video/blob/main/ltxv-13b-0.9.8-distilled.safetensors) [GitHub](https://github.com/Lightricks/LTX-Video) [Diffusers](https://huggingface.co/Lightricks/LTX-Video-0.9.8-13B-distilled#diffusers-🧨)")
-    
+    gr.Markdown("Fast high quality video generation.**Update (17/07):** now with the new v0.9.8 for improved prompt understanding and detail generation" )
+    gr.Markdown("[Model](https://huggingface.co/Lightricks/LTX-Video/blob/main/ltxv-13b-0.9.8-distilled.safetensors) [GitHub](https://github.com/Lightricks/LTX-Video) [Diffusers](https://huggingface.co/Lightricks/LTX-Video-0.9.8-13B-distilled#diffusers-🧨)")
     with gr.Row():
         with gr.Column():
             with gr.Tab("image-to-video") as image_tab:
