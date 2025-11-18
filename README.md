@@ -61,7 +61,7 @@ The repository supports multiple model configurations:
 1. Clone the repository:
 ```bash
 git clone https://github.com/Avinashhmavi/Video-Generation.git
-cd ltx-video-distilled
+cd Video-Generation
 ```
 
 2. Install dependencies:
